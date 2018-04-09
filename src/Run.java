@@ -13,11 +13,14 @@ public class Run {
         Scanner scanner = new Scanner( System.in );
         String command = "";
         boolean first_line = true;
+
         while( scanner.hasNextLine() )
         {
             lineInput = new String( scanner.nextLine() );
-
-            if(lineInput.equals("_p") ||lineInput.equals("_g") || lineInput.equals("_i")){
+            if(lineInput.equals("_q")){
+                break;
+            }
+            else if(lineInput.equals("_p") || lineInput.equals("_g") || lineInput.equals("_i")){
                 command = lineInput;
                 break;
             }
@@ -45,21 +48,21 @@ public class Run {
         lex.removeErrorListeners(); // remove default error message so we can add our own functionality
         parser.removeErrorListeners();
         parser.setErrorHandler(new BailErrorStrategy());
-        Visitor visitor = new Visitor();
+        //Visitor visitor = new Visitor();
 
         // print the result of parsing the input
         try {
-
-            visitor.visit(parser.start());
+            parser.start();
+            //visitor.visit();
             switch (command){
                 case "_p":  System.out.println("OK");
-                            break;
+                    break;
 
                 case "_g":
-                            break;
+                    break;
 
                 case "_i":  System.out.println("Not yet implemented");
-                            break;
+                    break;
             }
 
         }
@@ -70,10 +73,13 @@ public class Run {
                     break;
 
                 default: System.out.println("Invalid grammar");
-                         break;
+                    break;
             }
 
         }
+
+
+
 
     }
 }

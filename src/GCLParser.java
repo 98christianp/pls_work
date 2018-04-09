@@ -111,6 +111,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitStart(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitStart(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StartContext start() throws RecognitionException {
@@ -195,6 +200,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitCIf(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitCIf(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class CAssignContext extends ExprCContext {
 		public TerminalNode VAR() { return getToken(GCLParser.VAR, 0); }
@@ -209,6 +219,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitCAssign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitCAssign(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class CSepContext extends ExprCContext {
@@ -227,6 +242,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitCSep(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitCSep(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class CSkipContext extends ExprCContext {
 		public CSkipContext(ExprCContext ctx) { copyFrom(ctx); }
@@ -237,6 +257,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitCSkip(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitCSkip(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class CDoContext extends ExprCContext {
@@ -253,6 +278,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitCDo(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitCDo(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -393,6 +423,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitGCOnCondtion(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitGCOnCondtion(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class GCOnConditionContext extends ExprGCContext {
 		public ExprGCContext lhs;
@@ -411,6 +446,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitGCOnCondition(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitGCOnCondition(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -502,6 +542,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitAritVar(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitAritVar(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class AritDoubleContext extends AContext {
 		public List<AContext> a() {
@@ -519,6 +564,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitAritDouble(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitAritDouble(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class AritParenthesesContext extends AContext {
 		public AContext a() {
@@ -532,6 +582,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitAritParentheses(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitAritParentheses(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AritPowerContext extends AContext {
@@ -550,6 +605,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitAritPower(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitAritPower(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class AritDigContext extends AContext {
 		public TerminalNode DIG() { return getToken(GCLParser.DIG, 0); }
@@ -561,6 +621,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitAritDig(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitAritDig(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AritNegContext extends AContext {
@@ -575,6 +640,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitAritNeg(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitAritNeg(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -749,6 +819,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitBoolDouble(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitBoolDouble(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BoolCompareContext extends BContext {
 		public List<AContext> a() {
@@ -766,6 +841,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitBoolCompare(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitBoolCompare(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class TrueContext extends BContext {
 		public TrueContext(BContext ctx) { copyFrom(ctx); }
@@ -776,6 +856,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitTrue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitTrue(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BoolNotContext extends BContext {
@@ -791,6 +876,11 @@ public class GCLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitBoolNot(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitBoolNot(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class FalseContext extends BContext {
 		public FalseContext(BContext ctx) { copyFrom(ctx); }
@@ -801,6 +891,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitFalse(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitFalse(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BoolBracketContext extends BContext {
@@ -815,6 +910,11 @@ public class GCLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GCLListener ) ((GCLListener)listener).exitBoolBracket(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GCLVisitor ) return ((GCLVisitor<? extends T>)visitor).visitBoolBracket(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
