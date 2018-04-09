@@ -58,7 +58,7 @@ public class Graph extends GCLBaseVisitor<String> {
     @Override
     public String visitStart(GCLParser.StartContext ctx) {
 
-        //nodeStackStart.push(new Node());
+        nodeStackStart.push(new Node());
 
         nodeStackEnd.push(new Node(-1));
 
