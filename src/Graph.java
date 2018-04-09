@@ -1,7 +1,7 @@
 
-
 import java.util.*;
-public class Graph extends GCLBaseVisitor<void> {
+
+public class Graph extends GCLBaseVisitor<String> {
 
     private Stack<Node> nodeStackStart;
     private Stack<Node> nodeStackEnd;
@@ -15,37 +15,42 @@ public class Graph extends GCLBaseVisitor<void> {
             System.out.println(e);
         }
 
+        return "";
 
     }
 
     @Override
-    public void visitStart(GCLParser.StartContext ctx) {
+    public String visitStart(GCLParser.StartContext ctx) {
         nodeStackStart.add(new Node());
         nodeStackEnd.add(new Node(-1));
-        System.out.println(ctx.getParent().getText());
-        return this.visit(ctx.b());
+        this.visit(ctx.b());
+        return "";
     }
 
     @Override
-    public void visitBoolCompare(GCLParser.BoolCompareContext ctx) {
+    public String visitBoolCompare(GCLParser.BoolCompareContext ctx) {
         Node n1 = nodeStackStart.pop();
         nodeStackStart.push(new Node());
         String text = ctx.getText();
-        if(ctx.hasChildren()){
-            Node n2 = new Node();
+        Node n2;
+        if(ctx.getChildCount() !=0){
+            n2 = new Node();
         }
-        else{
-            Node n2 = nodeStackEnd.pop();
+        else {
+            n2 = nodeStackEnd.pop();
         }
-        Edge e1 = new Edge(n1,text,n2);
-        ArrayList.add(Edge);
 
-        visitChildren();
+        Edge e1 = new Edge(n1,text,n2);
+        edgeList.add(e1);
+        visitChildren(ctx);
+
+        return "";
     }
 
     @Override
-    public void visitTrue(GCLParser.TrueContext ctx) {
+    public String visitTrue(GCLParser.TrueContext ctx) {
         visitChildren(ctx);
+        return "";
     }
 
 

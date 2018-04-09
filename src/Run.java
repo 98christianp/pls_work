@@ -1,5 +1,6 @@
 import org.antlr.v4.runtime.*;
 import java.util.*;
+
 public class Run {
 
     public static void main(String args[]) throws Exception {
@@ -20,7 +21,9 @@ public class Run {
         Visitor visitor = new Visitor();
         // print the result of parsing the input
         try {
+
             System.out.println(visitor.visit(parser.start()));
+
         }
         catch (Exception e){
             System.out.println("Invalid grammar");
