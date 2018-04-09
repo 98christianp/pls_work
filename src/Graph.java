@@ -1,12 +1,30 @@
 
+import com.sun.source.doctree.SinceTree;
+
 import java.util.*;
 
 public class Graph extends GCLBaseVisitor<String> {
 
-    private Stack<Node> nodeStackStart;
-    private Stack<Node> nodeStackEnd;
-    private ArrayList<Edge> edgeList;
+    private Stack<Node> nodeStackStart = new Stack<Node>();
+    private Stack<Node> nodeStackEnd = new Stack<Node>();
+    private ArrayList<Edge> edgeList = new ArrayList<Edge>();
     private int nodeCount;
+
+    private void buildEdge(int count, String text){
+        Node n1 = nodeStackStart.pop();
+        nodeStackStart.push(new Node());
+
+        Node n2;
+        if(count !=0){
+            n2 = new Node();
+        }
+        else {
+            n2 = nodeStackEnd.pop();
+        }
+
+        Edge e1 = new Edge(n1,text,n2);
+        edgeList.add(e1);
+    }
 
     @Override
     public String toString(){
@@ -25,27 +43,21 @@ public class Graph extends GCLBaseVisitor<String> {
 
     @Override
     public String visitStart(GCLParser.StartContext ctx) {
-        nodeStackStart.add(new Node());
-        nodeStackEnd.add(new Node(-1));
+        System.out.println(1);
+        nodeStackStart.push(new Node());
+        System.out.println(2);
+        nodeStackEnd.push(new Node(-1));
+        System.out.println(3);
         this.visit(ctx.b());
+        System.out.println(4);
         return "";
     }
 
     @Override
     public String visitBoolCompare(GCLParser.BoolCompareContext ctx) {
-        Node n1 = nodeStackStart.pop();
-        nodeStackStart.push(new Node());
-        String text = ctx.getText();
-        Node n2;
-        if(ctx.getChildCount() !=0){
-            n2 = new Node();
-        }
-        else {
-            n2 = nodeStackEnd.pop();
-        }
 
-        Edge e1 = new Edge(n1,text,n2);
-        edgeList.add(e1);
+        buildEdge(ctx.getChildCount(),ctx.getText());
+
         visitChildren(ctx);
 
         return "";
@@ -57,7 +69,19 @@ public class Graph extends GCLBaseVisitor<String> {
         return "";
     }
 
-
-
+    @Override
+    public String visitCSep(GCLParser.CSepContext ctx) {
+        System.out.println("TEST2");
+        buildEdge(ctx.getChildCount(),ctx.getText());
+        visitChildren(ctx);
+        return "";
+    }
+    @Override
+    public String visitCSkip(GCLParser.CSkipContext ctx) {
+        System.out.println("TEST1");
+        buildEdge(ctx.getChildCount(),ctx.getText());
+        visitChildren(ctx);
+        return "";
+    }
 
 }

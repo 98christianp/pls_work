@@ -33,8 +33,7 @@ public class Run {
             first_line = false;
         }
         scanner.close();
-        //System.out.println(input.equals("a:=1;"));
-        //input = "a:=1;\nb:=1";
+
         System.out.println( input );
 
 
@@ -48,11 +47,10 @@ public class Run {
         lex.removeErrorListeners(); // remove default error message so we can add our own functionality
         parser.removeErrorListeners();
         parser.setErrorHandler(new BailErrorStrategy());
-        //Visitor visitor = new Visitor();
-
+        Graph graph = new Graph();
         // print the result of parsing the input
         try {
-            parser.start();
+            //parser.start();
             //visitor.visit();
             switch (command){
                 case "_p":  System.out.println("OK");
@@ -77,6 +75,17 @@ public class Run {
             }
 
         }
+        switch (command){
+
+            case "_g":
+                graph.visit(parser.start());
+                System.out.println(graph);
+                break;
+
+            case "_i":  System.out.println("Not yet implemented");
+                break;
+        }
+
 
 
 
