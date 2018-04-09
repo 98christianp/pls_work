@@ -18,6 +18,6 @@ public class Node {
     }
 
     public String toString(){
-        return (this.position == 0?"q▷":this.position == -1?"◀q":String.valueOf(this.position));
+        return ("q"+(this.position == 0?"▷":this.position == -1?"◀":String.valueOf(this.position)));
     }
 }

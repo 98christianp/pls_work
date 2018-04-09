@@ -1,6 +1,7 @@
 import org.antlr.v4.runtime.*;
 import java.util.*;
 
+
 public class Run {
     private Scanner scannerInput = new Scanner(System.in);
 
@@ -43,23 +44,25 @@ public class Run {
         CommonTokenStream tokens = new CommonTokenStream(lex);
         GCLParser parser = new GCLParser(tokens);
 
-        System.out.println(); //print a new line for  aesthetics
         lex.removeErrorListeners(); // remove default error message so we can add our own functionality
         parser.removeErrorListeners();
         parser.setErrorHandler(new BailErrorStrategy());
         Graph graph = new Graph();
         // print the result of parsing the input
         try {
-            //parser.start();
+            parser.start();
             //visitor.visit();
             switch (command){
-                case "_p":  System.out.println("OK");
+                case "_p":
+                    System.out.println("OK");
                     break;
 
                 case "_g":
+
                     break;
 
-                case "_i":  System.out.println("Not yet implemented");
+                case "_i":
+                    System.out.println("Not yet implemented");
                     break;
             }
 
@@ -75,6 +78,15 @@ public class Run {
             }
 
         }
+        // build the parser for the content of the input
+        inputStream = CharStreams.fromString(input);
+        lex = new GCLLexer(inputStream);
+        tokens = new CommonTokenStream(lex);
+        parser = new GCLParser(tokens);
+
+        lex.removeErrorListeners(); // remove default error message so we can add our own functionality
+        parser.removeErrorListeners();
+        parser.setErrorHandler(new BailErrorStrategy());
         switch (command){
 
             case "_g":
