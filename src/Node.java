@@ -1,4 +1,4 @@
-public class Node {
+public class Node implements Comparable<Node>{
     int position;
     public static int count = 0;
 
@@ -19,5 +19,10 @@ public class Node {
 
     public String toString(){
         return ("q"+(this.position == 0?"▷":this.position == -1?"◀":String.valueOf(this.position)));
+    }
+
+    @Override
+    public int compareTo(Node n) {
+        return n.getPosition() - this.position;
     }
 }

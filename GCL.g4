@@ -6,11 +6,11 @@ start : exprC EOF
       | b EOF
       ;
 
-exprC : VAR ':=' a              #CAssign
-      | 'skip'                  #CSkip
-      | exprC ';' exprC         #CSep
-      | IF exprGC FI            #CIf
-      | DO exprGC OD            #CDo
+exprC : VAR ':=' a                      #CAssign
+      | 'skip'                          #CSkip
+      | IF exprGC FI                    #CIf
+      | DO exprGC OD                    #CDo
+      | lhs = exprC ';' rhs = exprC     #CSep
       ;
 
 exprGC: lhs = b '->' rhs = exprC         #GCOnCondtion

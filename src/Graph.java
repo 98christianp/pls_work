@@ -5,33 +5,46 @@ import java.util.*;
 
 public class Graph extends GCLBaseVisitor<String> {
 
-    private Stack<Node> nodeStackStart = new Stack<Node>();
-    private Stack<Node> nodeStackEnd = new Stack<Node>();
+    private StackConf<Node> nodeStackStart = new StackConf<Node>();
+    private StackConf<Node> nodeStackEnd = new StackConf<Node>();
     private ArrayList<Edge> edgeList = new ArrayList<Edge>();
     private int nodeCount;
 
 
 
-    private void buildEdge(int count, String text){
+    private void buildEdge(int count, String text,boolean Ta){
+        /*
         Node n1,n2;
+        n1 = nodeStackStart.peek();
+        if (n1==null) {
 
-        if (false) {
-            n1 = nodeStackStart.pop();
-        }
-        else {
-            n1 = nodeStackStart.pop();
-            //n1 = new Node();
+            n1 = new Node();
+            System.out.println("NEW: "+n1);
         }
 
 
-        if(count != -10){
+        n2 = nodeStackEnd.pop();
+        if(n2 == null){
             n2 = new Node();
         }
-        else {
-            n2 = nodeStackEnd.pop();
-        }
+
         nodeStackStart.push(n2);
 
+        Edge e1 = new Edge(n1,text,n2);
+        edgeList.add(e1);
+        */
+        Node n1,n2;
+
+        if(Ta){
+            n1 = new Node(this.nodeCount);
+            n2 = nodeStackEnd.pop();
+        }
+        else{
+
+            n1 = nodeStackStart.pop();
+            n2 = new Node(this.nodeCount);
+        }
+        this.nodeCount++;
 
         Edge e1 = new Edge(n1,text,n2);
         edgeList.add(e1);
@@ -58,79 +71,153 @@ public class Graph extends GCLBaseVisitor<String> {
     @Override
     public String visitStart(GCLParser.StartContext ctx) {
 
-        nodeStackStart.push(new Node());
-
-        nodeStackEnd.push(new Node(-1));
-
-
         visitChildren(ctx);
         //this.visit(ctx.exprC());
 
         return "";
     }
-
+/*
     @Override public String visitBoolDouble(GCLParser.BoolDoubleContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        buildEdge(ctx.getChildCount(),ctx.getText(),false);
         return "";
     }
 
     @Override public String visitBoolCompare(GCLParser.BoolCompareContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        buildEdge(ctx.getChildCount(),ctx.getText(),false);
         return "";
     }
 
     @Override public String visitTrue(GCLParser.TrueContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        buildEdge(ctx.getChildCount(),ctx.getText(),false);
         return "";
     }
 
     @Override public String visitBoolNot(GCLParser.BoolNotContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        buildEdge(ctx.getChildCount(),ctx.getText(),false);
         return "";
     }
 
     @Override public String visitFalse(GCLParser.FalseContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        buildEdge(ctx.getChildCount(),ctx.getText(),false);
         return "";
     }
 
     @Override public String visitBoolBracket(GCLParser.BoolBracketContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        return "";
+    }
+
+    @Override public String visitAritVar(GCLParser.AritVarContext ctx) {
+        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        return "";
+    }
+
+    @Override public String visitAritDouble(GCLParser.AritDoubleContext ctx) {
+        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        return "";
+    }
+
+    @Override public String visitAritParentheses(GCLParser.AritParenthesesContext ctx) {
+        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        return "";
+    }
+
+    @Override public String visitAritPower(GCLParser.AritPowerContext ctx) {
+        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        return "";
+    }
+
+    @Override public String visitAritDig(GCLParser.AritDigContext ctx) {
+        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        return "";
+    }
+
+    @Override public String visitAritNeg(GCLParser.AritNegContext ctx) {
+        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        return "";
+    }
+*/
+
+    @Override
+    public String visitCAssign(GCLParser.CAssignContext ctx) {
+
+        Node n1,n2;
+        n2= nodeStackEnd.pop();
+        n1 = nodeStackStart.pop();
+        n1 = n1!=null?n1:new Node(nodeCount);
+        n2 = n2!=null?n2:new Node(nodeCount+1);
+        nodeCount++;
+        Edge e1 = new Edge(n1,ctx.getText(),n2);
+        edgeList.add(e1);
+
+        //buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        //visitChildren(ctx);
+        return "";
+    }
+
+    @Override
+    public String visitCSkip(GCLParser.CSkipContext ctx) {
+        Node n1,n2;
+        n2= nodeStackEnd.pop();
+        n1 = nodeStackStart.pop();
+        n1 = n1!=null?n1:new Node(nodeCount);
+        n2 = n2!=null?n2:new Node(nodeCount+1);
+        nodeCount++;
+        Edge e1 = new Edge(n1,ctx.getText(),n2);
+        edgeList.add(e1);
         return "";
     }
 
     @Override
     public String visitCSep(GCLParser.CSepContext ctx) {
-        visitChildren(ctx);
+
+        visit(ctx.getChild(0));
+        visit(ctx.getChild(2));
+        // TODO; how to change end?
+
         return "";
     }
-
-    @Override
-    public String visitCAssign(GCLParser.CAssignContext ctx) {
-            buildEdge(ctx.getChildCount(),ctx.getText());
-            visitChildren(ctx);
-            return "";
-        }
-
-    @Override
-    public String visitCSkip(GCLParser.CSkipContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText());
-        visitChildren(ctx);
-        return "";
-    }
-
+    // b -> G
     @Override public String visitGCOnCondtion(GCLParser.GCOnCondtionContext ctx) {
+        String text = ctx.getChild(0).getText();
+        Node n1,n2;
+        n1 = nodeStackStart.pop();
+        n1 = n1!=null?n1:new Node(nodeCount);
+        n2 = new Node(nodeCount+1);
+        nodeCount++;
+        Edge e1 = new Edge(n1, text, n2);
+        edgeList.add(e1);
+        visit(ctx.getChild(2));
 
+        return "";
+    }
+    // GC [] GC
+    @Override public String visitGCOnCondition(GCLParser.GCOnConditionContext ctx) {
+        Node startNode = new Node(nodeCount);
 
-        //buildEdge(1,ctx.getChild(0).getText());
+        Node endNode = new Node(nodeCount+1);
+        nodeCount ++;
 
-        visitChildren(ctx);
+        nodeStackStart.push(startNode);
+        nodeStackEnd.push(endNode);
+        visit(ctx.getChild(0));
+        nodeStackStart.pop();
+        nodeStackEnd.pop();
+        nodeCount --;
+        nodeStackStart.push(startNode);
+        nodeStackEnd.push(endNode);
+        visit(ctx.getChild(2));
+        //nodeStackStart.pop();
+
+        nodeStackStart.push(endNode);
+
+        //nodeCount ++;
+
         return "";
     }
 
     @Override
     public String visitCIf(GCLParser.CIfContext ctx) {
-
         visitChildren(ctx);
         return "";
     }
