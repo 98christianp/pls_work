@@ -10,12 +10,16 @@ public class Graph extends GCLBaseVisitor<String> {
 
     @Override
     public String toString(){
+        String output = "digraph program_graph {rankdir=LR;\n" +
+                "node [shape = circle]; q▷;\n" +
+                "node [shape = doublecircle]; q◀; \n" +
+                "node [shape = circle]";
 
         for(Edge e : this.edgeList){
-            System.out.println(e);
+            output.concat(e + "\n");
         }
-
-        return "";
+        output.concat("}");
+        return output;
 
     }
 

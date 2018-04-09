@@ -2,11 +2,38 @@ import org.antlr.v4.runtime.*;
 import java.util.*;
 
 public class Run {
+    private Scanner scannerInput = new Scanner(System.in);
 
     public static void main(String args[]) throws Exception {
 
-        System.out.println("Insert command (one line only):");
-        String input = System.console().readLine();
+        System.out.println("Insert command (end with: _p (Test grammar), _g (Generate Graph), _i (Interpretation):");
+
+        String input = "";
+        String lineInput = null;
+        Scanner scanner = new Scanner( System.in );
+        String command = "";
+        boolean first_line = true;
+        while( scanner.hasNextLine() )
+        {
+            lineInput = new String( scanner.nextLine() );
+
+            if(lineInput.equals("_p") ||lineInput.equals("_g") || lineInput.equals("_i")){
+                command = lineInput;
+                break;
+            }
+            else if(first_line){
+                input = input.concat(lineInput);
+            }
+            else{
+                input = input.concat("\n"+lineInput);
+            }
+            first_line = false;
+        }
+        scanner.close();
+        //System.out.println(input.equals("a:=1;"));
+        //input = "a:=1;\nb:=1";
+        System.out.println( input );
+
 
         // build the parser for the content of the input
         CharStream inputStream = CharStreams.fromString(input);
@@ -19,14 +46,34 @@ public class Run {
         parser.removeErrorListeners();
         parser.setErrorHandler(new BailErrorStrategy());
         Visitor visitor = new Visitor();
+
         // print the result of parsing the input
         try {
 
-            System.out.println(visitor.visit(parser.start()));
+            visitor.visit(parser.start());
+            switch (command){
+                case "_p":  System.out.println("OK");
+                            break;
+
+                case "_g":
+                            break;
+
+                case "_i":  System.out.println("Not yet implemented");
+                            break;
+            }
 
         }
         catch (Exception e){
-            System.out.println("Invalid grammar");
+            switch (command){
+                case "_p":
+                    System.out.println("KO");
+                    break;
+
+                default: System.out.println("Invalid grammar");
+                         break;
+            }
+
         }
+
     }
 }

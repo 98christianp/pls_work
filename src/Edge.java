@@ -14,4 +14,9 @@ public class Edge {
         this.toNode = to;
         this.edge = edge;
     }
+
+    @Override
+    public String toString(){
+        return this.fromNode + "->" + this.toNode + "[label = " + this.edge + "];";
+    }
 }
