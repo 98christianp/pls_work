@@ -17,10 +17,10 @@ public class Graph extends GCLBaseVisitor<String> {
 
         if (false) {
             n1 = nodeStackStart.pop();
-            nodeStackStart.push(n2);
         }
         else {
-            n1 = new Node();
+            n1 = nodeStackStart.pop();
+            //n1 = new Node();
         }
 
 
@@ -30,6 +30,7 @@ public class Graph extends GCLBaseVisitor<String> {
         else {
             n2 = nodeStackEnd.pop();
         }
+        nodeStackStart.push(n2);
 
 
         Edge e1 = new Edge(n1,text,n2);
