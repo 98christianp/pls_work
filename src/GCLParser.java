@@ -18,7 +18,7 @@ public class GCLParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, SKIPSTR=24, 
 		DIG=25, BAD=26, VAR=27, IF=28, FI=29, DO=30, OD=31, WS=32;
 	public static final int
 		RULE_start = 0, RULE_exprC = 1, RULE_exprGC = 2, RULE_a = 3, RULE_b = 4;
@@ -27,14 +27,14 @@ public class GCLParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "':='", "'skip'", "';'", "'->'", "'[]'", "'-'", "'+'", "'*'", "'^'", 
-		"'('", "')'", "'true'", "'false'", "'&'", "'|'", "'&&'", "'||'", "'!'", 
-		"'='", "'!='", "'>'", "'>='", "'<'", "'<='"
+		null, "':='", "';'", "'->'", "'[]'", "'-'", "'+'", "'*'", "'^'", "'('", 
+		"')'", "'true'", "'false'", "'&'", "'|'", "'&&'", "'||'", "'!'", "'='", 
+		"'!='", "'>'", "'>='", "'<'", "'<='", "'skip'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, "DIG", "BAD", "VAR", "IF", "FI", "DO", "OD", "WS"
+		"SKIPSTR", "DIG", "BAD", "VAR", "IF", "FI", "DO", "OD", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -249,6 +249,7 @@ public class GCLParser extends Parser {
 		}
 	}
 	public static class CSkipContext extends ExprCContext {
+		public TerminalNode SKIPSTR() { return getToken(GCLParser.SKIPSTR, 0); }
 		public CSkipContext(ExprCContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -318,13 +319,13 @@ public class GCLParser extends Parser {
 				a(0);
 				}
 				break;
-			case T__1:
+			case SKIPSTR:
 				{
 				_localctx = new CSkipContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(28);
-				match(T__1);
+				match(SKIPSTR);
 				}
 				break;
 			case IF:
@@ -371,7 +372,7 @@ public class GCLParser extends Parser {
 					setState(39);
 					if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 					setState(40);
-					match(T__2);
+					match(T__1);
 					setState(41);
 					exprC(4);
 					}
@@ -477,7 +478,7 @@ public class GCLParser extends Parser {
 			setState(48);
 			((GCOnCondtionContext)_localctx).lhs = b(0);
 			setState(49);
-			match(T__3);
+			match(T__2);
 			setState(50);
 			((GCOnCondtionContext)_localctx).rhs = exprC(0);
 			}
@@ -497,7 +498,7 @@ public class GCLParser extends Parser {
 					setState(52);
 					if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
 					setState(53);
-					match(T__4);
+					match(T__3);
 					setState(54);
 					((GCOnConditionContext)_localctx).rhs = exprGC(2);
 					}
@@ -676,13 +677,13 @@ public class GCLParser extends Parser {
 				match(DIG);
 				}
 				break;
-			case T__5:
+			case T__4:
 				{
 				_localctx = new AritNegContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(62);
-				match(T__5);
+				match(T__4);
 				setState(63);
 				a(7);
 				}
@@ -696,17 +697,17 @@ public class GCLParser extends Parser {
 				match(VAR);
 				}
 				break;
-			case T__9:
+			case T__8:
 				{
 				_localctx = new AritParenthesesContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(65);
-				match(T__9);
+				match(T__8);
 				setState(66);
 				a(0);
 				setState(67);
-				match(T__10);
+				match(T__9);
 				}
 				break;
 			default:
@@ -731,7 +732,7 @@ public class GCLParser extends Parser {
 						setState(71);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(72);
-						match(T__6);
+						match(T__5);
 						setState(73);
 						a(6);
 						}
@@ -743,7 +744,7 @@ public class GCLParser extends Parser {
 						setState(74);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(75);
-						match(T__5);
+						match(T__4);
 						setState(76);
 						a(5);
 						}
@@ -755,7 +756,7 @@ public class GCLParser extends Parser {
 						setState(77);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(78);
-						match(T__7);
+						match(T__6);
 						setState(79);
 						a(4);
 						}
@@ -767,7 +768,7 @@ public class GCLParser extends Parser {
 						setState(80);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(81);
-						match(T__8);
+						match(T__7);
 						setState(82);
 						a(2);
 						}
@@ -943,7 +944,7 @@ public class GCLParser extends Parser {
 				_prevctx = _localctx;
 
 				setState(89);
-				match(T__11);
+				match(T__10);
 				}
 				break;
 			case 2:
@@ -952,7 +953,7 @@ public class GCLParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(90);
-				match(T__12);
+				match(T__11);
 				}
 				break;
 			case 3:
@@ -961,7 +962,7 @@ public class GCLParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(91);
-				match(T__17);
+				match(T__16);
 				setState(92);
 				b(8);
 				}
@@ -974,7 +975,7 @@ public class GCLParser extends Parser {
 				setState(93);
 				a(0);
 				setState(94);
-				match(T__18);
+				match(T__17);
 				setState(95);
 				a(0);
 				}
@@ -987,7 +988,7 @@ public class GCLParser extends Parser {
 				setState(97);
 				a(0);
 				setState(98);
-				match(T__19);
+				match(T__18);
 				setState(99);
 				a(0);
 				}
@@ -1000,7 +1001,7 @@ public class GCLParser extends Parser {
 				setState(101);
 				a(0);
 				setState(102);
-				match(T__20);
+				match(T__19);
 				setState(103);
 				a(0);
 				}
@@ -1013,7 +1014,7 @@ public class GCLParser extends Parser {
 				setState(105);
 				a(0);
 				setState(106);
-				match(T__21);
+				match(T__20);
 				setState(107);
 				a(0);
 				}
@@ -1026,7 +1027,7 @@ public class GCLParser extends Parser {
 				setState(109);
 				a(0);
 				setState(110);
-				match(T__22);
+				match(T__21);
 				setState(111);
 				a(0);
 				}
@@ -1039,7 +1040,7 @@ public class GCLParser extends Parser {
 				setState(113);
 				a(0);
 				setState(114);
-				match(T__23);
+				match(T__22);
 				setState(115);
 				a(0);
 				}
@@ -1050,11 +1051,11 @@ public class GCLParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(117);
-				match(T__9);
+				match(T__8);
 				setState(118);
 				b(0);
 				setState(119);
-				match(T__10);
+				match(T__9);
 				}
 				break;
 			}
@@ -1077,7 +1078,7 @@ public class GCLParser extends Parser {
 						setState(123);
 						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
 						setState(124);
-						match(T__13);
+						match(T__12);
 						setState(125);
 						b(13);
 						}
@@ -1089,7 +1090,7 @@ public class GCLParser extends Parser {
 						setState(126);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
 						setState(127);
-						match(T__14);
+						match(T__13);
 						setState(128);
 						b(12);
 						}
@@ -1101,7 +1102,7 @@ public class GCLParser extends Parser {
 						setState(129);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
 						setState(130);
-						match(T__15);
+						match(T__14);
 						setState(131);
 						b(11);
 						}
@@ -1113,7 +1114,7 @@ public class GCLParser extends Parser {
 						setState(132);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
 						setState(133);
-						match(T__16);
+						match(T__15);
 						setState(134);
 						b(10);
 						}
@@ -1208,30 +1209,30 @@ public class GCLParser extends Parser {
 		"\23\5\b\5\2\23\24\7\2\2\3\24\31\3\2\2\2\25\26\5\n\6\2\26\27\7\2\2\3\27"+
 		"\31\3\2\2\2\30\f\3\2\2\2\30\17\3\2\2\2\30\22\3\2\2\2\30\25\3\2\2\2\31"+
 		"\3\3\2\2\2\32\33\b\3\1\2\33\34\7\35\2\2\34\35\7\3\2\2\35(\5\b\5\2\36("+
-		"\7\4\2\2\37 \7\36\2\2 !\5\6\4\2!\"\7\37\2\2\"(\3\2\2\2#$\7 \2\2$%\5\6"+
+		"\7\32\2\2\37 \7\36\2\2 !\5\6\4\2!\"\7\37\2\2\"(\3\2\2\2#$\7 \2\2$%\5\6"+
 		"\4\2%&\7!\2\2&(\3\2\2\2\'\32\3\2\2\2\'\36\3\2\2\2\'\37\3\2\2\2\'#\3\2"+
-		"\2\2(.\3\2\2\2)*\f\5\2\2*+\7\5\2\2+-\5\4\3\6,)\3\2\2\2-\60\3\2\2\2.,\3"+
+		"\2\2(.\3\2\2\2)*\f\5\2\2*+\7\4\2\2+-\5\4\3\6,)\3\2\2\2-\60\3\2\2\2.,\3"+
 		"\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62\b\4\1\2\62\63\5\n\6\2\63"+
-		"\64\7\6\2\2\64\65\5\4\3\2\65;\3\2\2\2\66\67\f\3\2\2\678\7\7\2\28:\5\6"+
+		"\64\7\5\2\2\64\65\5\4\3\2\65;\3\2\2\2\66\67\f\3\2\2\678\7\6\2\28:\5\6"+
 		"\4\49\66\3\2\2\2:=\3\2\2\2;9\3\2\2\2;<\3\2\2\2<\7\3\2\2\2=;\3\2\2\2>?"+
-		"\b\5\1\2?H\7\33\2\2@A\7\b\2\2AH\5\b\5\tBH\7\35\2\2CD\7\f\2\2DE\5\b\5\2"+
-		"EF\7\r\2\2FH\3\2\2\2G>\3\2\2\2G@\3\2\2\2GB\3\2\2\2GC\3\2\2\2HW\3\2\2\2"+
-		"IJ\f\7\2\2JK\7\t\2\2KV\5\b\5\bLM\f\6\2\2MN\7\b\2\2NV\5\b\5\7OP\f\5\2\2"+
-		"PQ\7\n\2\2QV\5\b\5\6RS\f\4\2\2ST\7\13\2\2TV\5\b\5\4UI\3\2\2\2UL\3\2\2"+
+		"\b\5\1\2?H\7\33\2\2@A\7\7\2\2AH\5\b\5\tBH\7\35\2\2CD\7\13\2\2DE\5\b\5"+
+		"\2EF\7\f\2\2FH\3\2\2\2G>\3\2\2\2G@\3\2\2\2GB\3\2\2\2GC\3\2\2\2HW\3\2\2"+
+		"\2IJ\f\7\2\2JK\7\b\2\2KV\5\b\5\bLM\f\6\2\2MN\7\7\2\2NV\5\b\5\7OP\f\5\2"+
+		"\2PQ\7\t\2\2QV\5\b\5\6RS\f\4\2\2ST\7\n\2\2TV\5\b\5\4UI\3\2\2\2UL\3\2\2"+
 		"\2UO\3\2\2\2UR\3\2\2\2VY\3\2\2\2WU\3\2\2\2WX\3\2\2\2X\t\3\2\2\2YW\3\2"+
-		"\2\2Z[\b\6\1\2[|\7\16\2\2\\|\7\17\2\2]^\7\24\2\2^|\5\n\6\n_`\5\b\5\2`"+
-		"a\7\25\2\2ab\5\b\5\2b|\3\2\2\2cd\5\b\5\2de\7\26\2\2ef\5\b\5\2f|\3\2\2"+
-		"\2gh\5\b\5\2hi\7\27\2\2ij\5\b\5\2j|\3\2\2\2kl\5\b\5\2lm\7\30\2\2mn\5\b"+
-		"\5\2n|\3\2\2\2op\5\b\5\2pq\7\31\2\2qr\5\b\5\2r|\3\2\2\2st\5\b\5\2tu\7"+
-		"\32\2\2uv\5\b\5\2v|\3\2\2\2wx\7\f\2\2xy\5\n\6\2yz\7\r\2\2z|\3\2\2\2{Z"+
-		"\3\2\2\2{\\\3\2\2\2{]\3\2\2\2{_\3\2\2\2{c\3\2\2\2{g\3\2\2\2{k\3\2\2\2"+
-		"{o\3\2\2\2{s\3\2\2\2{w\3\2\2\2|\u008b\3\2\2\2}~\f\16\2\2~\177\7\20\2\2"+
-		"\177\u008a\5\n\6\17\u0080\u0081\f\r\2\2\u0081\u0082\7\21\2\2\u0082\u008a"+
-		"\5\n\6\16\u0083\u0084\f\f\2\2\u0084\u0085\7\22\2\2\u0085\u008a\5\n\6\r"+
-		"\u0086\u0087\f\13\2\2\u0087\u0088\7\23\2\2\u0088\u008a\5\n\6\f\u0089}"+
-		"\3\2\2\2\u0089\u0080\3\2\2\2\u0089\u0083\3\2\2\2\u0089\u0086\3\2\2\2\u008a"+
-		"\u008d\3\2\2\2\u008b\u0089\3\2\2\2\u008b\u008c\3\2\2\2\u008c\13\3\2\2"+
-		"\2\u008d\u008b\3\2\2\2\f\30\'.;GUW{\u0089\u008b";
+		"\2\2Z[\b\6\1\2[|\7\r\2\2\\|\7\16\2\2]^\7\23\2\2^|\5\n\6\n_`\5\b\5\2`a"+
+		"\7\24\2\2ab\5\b\5\2b|\3\2\2\2cd\5\b\5\2de\7\25\2\2ef\5\b\5\2f|\3\2\2\2"+
+		"gh\5\b\5\2hi\7\26\2\2ij\5\b\5\2j|\3\2\2\2kl\5\b\5\2lm\7\27\2\2mn\5\b\5"+
+		"\2n|\3\2\2\2op\5\b\5\2pq\7\30\2\2qr\5\b\5\2r|\3\2\2\2st\5\b\5\2tu\7\31"+
+		"\2\2uv\5\b\5\2v|\3\2\2\2wx\7\13\2\2xy\5\n\6\2yz\7\f\2\2z|\3\2\2\2{Z\3"+
+		"\2\2\2{\\\3\2\2\2{]\3\2\2\2{_\3\2\2\2{c\3\2\2\2{g\3\2\2\2{k\3\2\2\2{o"+
+		"\3\2\2\2{s\3\2\2\2{w\3\2\2\2|\u008b\3\2\2\2}~\f\16\2\2~\177\7\17\2\2\177"+
+		"\u008a\5\n\6\17\u0080\u0081\f\r\2\2\u0081\u0082\7\20\2\2\u0082\u008a\5"+
+		"\n\6\16\u0083\u0084\f\f\2\2\u0084\u0085\7\21\2\2\u0085\u008a\5\n\6\r\u0086"+
+		"\u0087\f\13\2\2\u0087\u0088\7\22\2\2\u0088\u008a\5\n\6\f\u0089}\3\2\2"+
+		"\2\u0089\u0080\3\2\2\2\u0089\u0083\3\2\2\2\u0089\u0086\3\2\2\2\u008a\u008d"+
+		"\3\2\2\2\u008b\u0089\3\2\2\2\u008b\u008c\3\2\2\2\u008c\13\3\2\2\2\u008d"+
+		"\u008b\3\2\2\2\f\30\'.;GUW{\u0089\u008b";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

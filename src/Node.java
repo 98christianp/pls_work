@@ -17,4 +17,7 @@ public class Node {
         this.position = p;
     }
 
+    public String toString(){
+        return (this.position == 0?"q▷":this.position == -1?"◀q":String.valueOf(this.position));
+    }
 }

@@ -44,6 +44,7 @@ b     : 'true'                #True
       | '(' b ')'             #BoolBracket
       ;
 
+
 DIG : ('0'..'9')+; // Digits
 BAD : 'if' | 'fi' | 'do' |'od'; // This way the keyword statements gets assigned to BAD not VAR
 VAR : ('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9')*; // Variable

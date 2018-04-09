@@ -12,18 +12,20 @@ public class Graph extends GCLBaseVisitor<String> {
 
     private void buildEdge(int count, String text){
         Node n1 = nodeStackStart.pop();
-        nodeStackStart.push(new Node());
-
         Node n2;
-        if(count !=0){
+
+        System.out.println("Children;"+count);
+        if(count != 0){
             n2 = new Node();
         }
         else {
             n2 = nodeStackEnd.pop();
         }
+        nodeStackStart.push(n2);
 
         Edge e1 = new Edge(n1,text,n2);
         edgeList.add(e1);
+
     }
 
     @Override
@@ -31,25 +33,27 @@ public class Graph extends GCLBaseVisitor<String> {
         String output = "digraph program_graph {rankdir=LR;\n" +
                 "node [shape = circle]; q▷;\n" +
                 "node [shape = doublecircle]; q◀; \n" +
-                "node [shape = circle]";
+                "node [shape = circle]\n";
+
 
         for(Edge e : this.edgeList){
-            output.concat(e + "\n");
+
+            output = output.concat(e + "\n");
         }
-        output.concat("}");
+        output = output.concat("}");
         return output;
 
     }
 
     @Override
     public String visitStart(GCLParser.StartContext ctx) {
-        System.out.println(1);
+
         nodeStackStart.push(new Node());
-        System.out.println(2);
+
         nodeStackEnd.push(new Node(-1));
-        System.out.println(3);
-        this.visit(ctx.b());
-        System.out.println(4);
+
+        this.visit(ctx.exprC());
+
         return "";
     }
 
@@ -71,14 +75,13 @@ public class Graph extends GCLBaseVisitor<String> {
 
     @Override
     public String visitCSep(GCLParser.CSepContext ctx) {
-        System.out.println("TEST2");
-        buildEdge(ctx.getChildCount(),ctx.getText());
+        System.out.println("c:"+ctx.getChildCount());
+        //buildEdge(ctx.getChildCount(),ctx.getText());
         visitChildren(ctx);
         return "";
     }
     @Override
     public String visitCSkip(GCLParser.CSkipContext ctx) {
-        System.out.println("TEST1");
         buildEdge(ctx.getChildCount(),ctx.getText());
         visitChildren(ctx);
         return "";
