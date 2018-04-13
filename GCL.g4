@@ -1,4 +1,5 @@
 grammar GCL;
+SEP : ';';
 
 start : exprC EOF
       | exprGC EOF
@@ -6,11 +7,13 @@ start : exprC EOF
       | b EOF
       ;
 
-exprC : VAR ':=' a                      #CAssign
-      | 'skip'                          #CSkip
-      | IF exprGC FI                    #CIf
-      | DO exprGC OD                    #CDo
-      | lhs = exprC ';' rhs = exprC     #CSep
+
+exprC : VAR ':=' a                        #CAssign
+      | 'skip'                            #CSkip
+      | IF exprGC FI                      #CIf
+      | DO exprGC OD                      #CDo
+      | <assoc=right> exprC SEP exprC     #CSep
+
       ;
 
 exprGC: lhs = b '->' rhs = exprC         #GCOnCondtion
@@ -43,6 +46,7 @@ b     : 'true'                #True
       | a '<=' a              #BoolCompare
       | '(' b ')'             #BoolBracket
       ;
+
 
 
 DIG : ('0'..'9')+; // Digits

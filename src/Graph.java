@@ -1,51 +1,23 @@
 
 import com.sun.source.doctree.SinceTree;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 
 import java.util.*;
 
 public class Graph extends GCLBaseVisitor<String> {
 
-    private StackConf<Node> nodeStackStart = new StackConf<Node>();
-    private StackConf<Node> nodeStackEnd = new StackConf<Node>();
+    private Stack<Node> nodeStackStart = new Stack<Node>();
+    private Stack<Node> nodeStackEnd = new Stack<Node>();
     private ArrayList<Edge> edgeList = new ArrayList<Edge>();
-    private int nodeCount;
+    private int nodeCount = 0;
 
 
 
-    private void buildEdge(int count, String text,boolean Ta){
-        /*
+    private void buildEdge(String text){
         Node n1,n2;
+        n2 = nodeStackEnd.peek();
         n1 = nodeStackStart.peek();
-        if (n1==null) {
-
-            n1 = new Node();
-            System.out.println("NEW: "+n1);
-        }
-
-
-        n2 = nodeStackEnd.pop();
-        if(n2 == null){
-            n2 = new Node();
-        }
-
-        nodeStackStart.push(n2);
-
-        Edge e1 = new Edge(n1,text,n2);
-        edgeList.add(e1);
-        */
-        Node n1,n2;
-
-        if(Ta){
-            n1 = new Node(this.nodeCount);
-            n2 = nodeStackEnd.pop();
-        }
-        else{
-
-            n1 = nodeStackStart.pop();
-            n2 = new Node(this.nodeCount);
-        }
-        this.nodeCount++;
-
         Edge e1 = new Edge(n1,text,n2);
         edgeList.add(e1);
 
@@ -70,6 +42,9 @@ public class Graph extends GCLBaseVisitor<String> {
 
     @Override
     public String visitStart(GCLParser.StartContext ctx) {
+        //nodeStackStart.add(new Node(0));
+        nodeStackStart.add(new Node(0));
+        nodeStackEnd.add(new Node(-1));
 
         visitChildren(ctx);
         //this.visit(ctx.exprC());
@@ -140,78 +115,60 @@ public class Graph extends GCLBaseVisitor<String> {
 
     @Override
     public String visitCAssign(GCLParser.CAssignContext ctx) {
-
-        Node n1,n2;
-        n2= nodeStackEnd.pop();
-        n1 = nodeStackStart.pop();
-        n1 = n1!=null?n1:new Node(nodeCount);
-        n2 = n2!=null?n2:new Node(nodeCount+1);
-        nodeCount++;
-        Edge e1 = new Edge(n1,ctx.getText(),n2);
-        edgeList.add(e1);
-
-        //buildEdge(ctx.getChildCount(),ctx.getText(),true);
-        //visitChildren(ctx);
+        buildEdge(ctx.getText());
         return "";
     }
 
     @Override
     public String visitCSkip(GCLParser.CSkipContext ctx) {
-        Node n1,n2;
-        n2= nodeStackEnd.pop();
-        n1 = nodeStackStart.pop();
-        n1 = n1!=null?n1:new Node(nodeCount);
-        n2 = n2!=null?n2:new Node(nodeCount+1);
-        nodeCount++;
-        Edge e1 = new Edge(n1,ctx.getText(),n2);
-        edgeList.add(e1);
+        buildEdge(ctx.getText());
         return "";
     }
 
     @Override
     public String visitCSep(GCLParser.CSepContext ctx) {
 
+
+        nodeStackEnd.add(new Node(nodeCount+1));
+        nodeCount++;
+
         visit(ctx.getChild(0));
+
+        nodeStackStart.pop();
+        nodeStackStart.add(nodeStackEnd.pop());
+
+
         visit(ctx.getChild(2));
-        // TODO; how to change end?
 
         return "";
     }
+
     // b -> G
     @Override public String visitGCOnCondtion(GCLParser.GCOnCondtionContext ctx) {
         String text = ctx.getChild(0).getText();
-        Node n1,n2;
-        n1 = nodeStackStart.pop();
-        n1 = n1!=null?n1:new Node(nodeCount);
-        n2 = new Node(nodeCount+1);
+
+        nodeStackEnd.add(new Node(nodeCount+1));
         nodeCount++;
-        Edge e1 = new Edge(n1, text, n2);
-        edgeList.add(e1);
+
+        buildEdge(text);
+
+        nodeStackStart.pop();
+        nodeStackStart.add(nodeStackEnd.pop());
+
         visit(ctx.getChild(2));
 
         return "";
     }
+
     // GC [] GC
     @Override public String visitGCOnCondition(GCLParser.GCOnConditionContext ctx) {
-        Node startNode = new Node(nodeCount);
+        Node startNode = nodeStackStart.peek();
 
-        Node endNode = new Node(nodeCount+1);
-        nodeCount ++;
-
-        nodeStackStart.push(startNode);
-        nodeStackEnd.push(endNode);
         visit(ctx.getChild(0));
         nodeStackStart.pop();
-        nodeStackEnd.pop();
-        nodeCount --;
-        nodeStackStart.push(startNode);
-        nodeStackEnd.push(endNode);
+        nodeStackStart.add(startNode);
         visit(ctx.getChild(2));
-        //nodeStackStart.pop();
 
-        nodeStackStart.push(endNode);
-
-        //nodeCount ++;
 
         return "";
     }
@@ -221,4 +178,37 @@ public class Graph extends GCLBaseVisitor<String> {
         visitChildren(ctx);
         return "";
     }
+
+    @Override public String visitCDo(GCLParser.CDoContext ctx) {
+        String b = done(ctx.getChild(1));
+
+
+        Node returner = nodeStackStart.peek();
+        //nodeStackStart.add(returner);
+        //nodeStackEnd.add(returner);
+        nodeStackEnd.add(returner);
+
+        visit(ctx.getChild(1));
+        nodeStackEnd.pop();
+        nodeStackStart.pop();
+        nodeStackStart.add(returner);
+
+        buildEdge(b);
+
+        nodeCount++;
+        return "";
+    }
+
+    private String done(ParseTree ctx){
+
+        if (ctx instanceof GCLParser.GCOnCondtionContext){
+
+            return "(!("+ctx.getChild(0).getText()+"))";
+        }
+        //System.out.println(ctx.getText()+" || "+ (ctx instanceof GCLParser.BIdentifyContext));
+        // TODO: Check other class or naaaaah?
+        return done(ctx.getChild(0)) + "&" +done(ctx.getChild(2));
+    }
+
+
 }
