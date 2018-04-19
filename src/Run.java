@@ -35,7 +35,8 @@ public class Run {
         }
         scanner.close();
 
-        System.out.println( input );
+        //Debug
+        //System.out.println( input );
 
 
         // build the parser for the content of the input
@@ -48,6 +49,7 @@ public class Run {
         parser.removeErrorListeners();
         parser.setErrorHandler(new BailErrorStrategy());
         Graph graph = new Graph();
+        Interpreter interpreter = new Interpreter();
         // print the result of parsing the input
         try {
             parser.start();
@@ -62,7 +64,7 @@ public class Run {
                     break;
 
                 case "_i":
-                    System.out.println("Not yet implemented");
+
                     break;
             }
 
@@ -94,7 +96,9 @@ public class Run {
                 System.out.println(graph);
                 break;
 
-            case "_i":  System.out.println("Not yet implemented");
+            case "_i":
+                interpreter.visit(parser.start());
+                System.out.println(interpreter);
                 break;
         }
 

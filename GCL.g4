@@ -18,15 +18,14 @@ exprC : VAR ':=' a                        #CAssign
 
 exprGC: lhs = b '->' rhs = exprC         #GCOnCondtion
       | lhs = exprGC '[]' rhs = exprGC   #GCOnCondition
-
       ;
 
 a     : DIG                     #AritDig
       | <assoc=right> '-' a     #AritNeg
       | VAR                     #AritVar
+      | a '*' a                 #AritDouble
       | a '+' a                 #AritDouble
       | a '-' a                 #AritDouble
-      | a '*' a                 #AritDouble
       | <assoc=right> a '^' a   #AritPower
       | '(' a ')'               #AritParentheses
       ;

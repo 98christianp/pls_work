@@ -27,7 +27,7 @@ public class GCLParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "':='", "'skip'", "'->'", "'[]'", "'-'", "'+'", "'*'", "'^'", "'('", 
+		null, "':='", "'skip'", "'->'", "'[]'", "'-'", "'*'", "'+'", "'^'", "'('", 
 		"')'", "'true'", "'false'", "'&'", "'|'", "'&&'", "'||'", "'!'", "'='", 
 		"'!='", "'>'", "'>='", "'<'", "'<='", "';'"
 	};
@@ -744,7 +744,7 @@ public class GCLParser extends Parser {
 						setState(74);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(75);
-						match(T__4);
+						match(T__6);
 						setState(76);
 						a(5);
 						}
@@ -756,7 +756,7 @@ public class GCLParser extends Parser {
 						setState(77);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(78);
-						match(T__6);
+						match(T__4);
 						setState(79);
 						a(4);
 						}
@@ -1217,8 +1217,8 @@ public class GCLParser extends Parser {
 		"\6\4\49\66\3\2\2\2:=\3\2\2\2;9\3\2\2\2;<\3\2\2\2<\7\3\2\2\2=;\3\2\2\2"+
 		">?\b\5\1\2?H\7\33\2\2@A\7\7\2\2AH\5\b\5\tBH\7\35\2\2CD\7\13\2\2DE\5\b"+
 		"\5\2EF\7\f\2\2FH\3\2\2\2G>\3\2\2\2G@\3\2\2\2GB\3\2\2\2GC\3\2\2\2HW\3\2"+
-		"\2\2IJ\f\7\2\2JK\7\b\2\2KV\5\b\5\bLM\f\6\2\2MN\7\7\2\2NV\5\b\5\7OP\f\5"+
-		"\2\2PQ\7\t\2\2QV\5\b\5\6RS\f\4\2\2ST\7\n\2\2TV\5\b\5\4UI\3\2\2\2UL\3\2"+
+		"\2\2IJ\f\7\2\2JK\7\b\2\2KV\5\b\5\bLM\f\6\2\2MN\7\t\2\2NV\5\b\5\7OP\f\5"+
+		"\2\2PQ\7\7\2\2QV\5\b\5\6RS\f\4\2\2ST\7\n\2\2TV\5\b\5\4UI\3\2\2\2UL\3\2"+
 		"\2\2UO\3\2\2\2UR\3\2\2\2VY\3\2\2\2WU\3\2\2\2WX\3\2\2\2X\t\3\2\2\2YW\3"+
 		"\2\2\2Z[\b\6\1\2[|\7\r\2\2\\|\7\16\2\2]^\7\23\2\2^|\5\n\6\n_`\5\b\5\2"+
 		"`a\7\24\2\2ab\5\b\5\2b|\3\2\2\2cd\5\b\5\2de\7\25\2\2ef\5\b\5\2f|\3\2\2"+
