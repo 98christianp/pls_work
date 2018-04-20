@@ -183,6 +183,18 @@ public class GCLBaseListener implements GCLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAritDiv(GCLParser.AritDivContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAritDiv(GCLParser.AritDivContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBoolDouble(GCLParser.BoolDoubleContext ctx) { }
 	/**
 	 * {@inheritDoc}

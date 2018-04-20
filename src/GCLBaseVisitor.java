@@ -114,6 +114,13 @@ public class GCLBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements GC
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitAritDiv(GCLParser.AritDivContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitBoolDouble(GCLParser.BoolDoubleContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

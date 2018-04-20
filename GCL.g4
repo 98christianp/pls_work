@@ -23,6 +23,7 @@ exprGC: lhs = b '->' rhs = exprC         #GCOnCondtion
 a     : DIG                     #AritDig
       | <assoc=right> '-' a     #AritNeg
       | VAR                     #AritVar
+      | a '/' a                 #AritDiv
       | a '*' a                 #AritDouble
       | a '+' a                 #AritDouble
       | a '-' a                 #AritDouble

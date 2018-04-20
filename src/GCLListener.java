@@ -173,6 +173,18 @@ public interface GCLListener extends ParseTreeListener {
 	 */
 	void exitAritNeg(GCLParser.AritNegContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code AritDiv}
+	 * labeled alternative in {@link GCLParser#a}.
+	 * @param ctx the parse tree
+	 */
+	void enterAritDiv(GCLParser.AritDivContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AritDiv}
+	 * labeled alternative in {@link GCLParser#a}.
+	 * @param ctx the parse tree
+	 */
+	void exitAritDiv(GCLParser.AritDivContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code BoolDouble}
 	 * labeled alternative in {@link GCLParser#b}.
 	 * @param ctx the parse tree

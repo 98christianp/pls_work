@@ -49,7 +49,7 @@ public class Run {
         parser.removeErrorListeners();
         parser.setErrorHandler(new BailErrorStrategy());
         Graph graph = new Graph();
-        Interpreter interpreter = new Interpreter();
+
         // print the result of parsing the input
         try {
             parser.start();
@@ -97,11 +97,15 @@ public class Run {
                 break;
 
             case "_i":
-                interpreter.visit(parser.start());
+                graph.visit(parser.start());
+                Interpreter interpreter = new Interpreter(graph.edgeList);//new InterpreterHack();
+                //interpreter.visit(parser.start());
+
+                interpreter.getMeThatSweetMemory();
                 System.out.println(interpreter);
+
                 break;
         }
-
 
 
 

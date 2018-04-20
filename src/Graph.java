@@ -9,16 +9,25 @@ public class Graph extends GCLBaseVisitor<String> {
 
     private Stack<Node> nodeStackStart = new Stack<Node>();
     private Stack<Node> nodeStackEnd = new Stack<Node>();
-    private ArrayList<Edge> edgeList = new ArrayList<Edge>();
+    public ArrayList<Edge> edgeList = new ArrayList<Edge>();
     private int nodeCount = 0;
 
 
 
-    private void buildEdge(String text){
+    private void buildEdge(ParseTree ctx){
         Node n1,n2;
         n2 = nodeStackEnd.peek();
         n1 = nodeStackStart.peek();
-        Edge e1 = new Edge(n1,text,n2);
+        Edge e1 = new Edge(n1,ctx,n2);
+        edgeList.add(e1);
+
+    }
+
+    private void buildEdge(ParseTree ctx,boolean runDone){
+        Node n1,n2;
+        n2 = nodeStackEnd.peek();
+        n1 = nodeStackStart.peek();
+        Edge e1 = new Edge(n1,ctx,n2,true);
         edgeList.add(e1);
 
     }
@@ -53,75 +62,75 @@ public class Graph extends GCLBaseVisitor<String> {
     }
 /*
     @Override public String visitBoolDouble(GCLParser.BoolDoubleContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        buildEdge(ctx.getChildCount(),ctx,false);
         return "";
     }
 
     @Override public String visitBoolCompare(GCLParser.BoolCompareContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        buildEdge(ctx.getChildCount(),ctx,false);
         return "";
     }
 
     @Override public String visitTrue(GCLParser.TrueContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        buildEdge(ctx.getChildCount(),ctx,false);
         return "";
     }
 
     @Override public String visitBoolNot(GCLParser.BoolNotContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        buildEdge(ctx.getChildCount(),ctx,false);
         return "";
     }
 
     @Override public String visitFalse(GCLParser.FalseContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        buildEdge(ctx.getChildCount(),ctx,false);
         return "";
     }
 
     @Override public String visitBoolBracket(GCLParser.BoolBracketContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),false);
+        buildEdge(ctx.getChildCount(),ctx,false);
         return "";
     }
 
     @Override public String visitAritVar(GCLParser.AritVarContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        buildEdge(ctx.getChildCount(),ctx,true);
         return "";
     }
 
     @Override public String visitAritDouble(GCLParser.AritDoubleContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        buildEdge(ctx.getChildCount(),ctx,true);
         return "";
     }
 
     @Override public String visitAritParentheses(GCLParser.AritParenthesesContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        buildEdge(ctx.getChildCount(),ctx,true);
         return "";
     }
 
     @Override public String visitAritPower(GCLParser.AritPowerContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        buildEdge(ctx.getChildCount(),ctx,true);
         return "";
     }
 
     @Override public String visitAritDig(GCLParser.AritDigContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        buildEdge(ctx.getChildCount(),ctx,true);
         return "";
     }
 
     @Override public String visitAritNeg(GCLParser.AritNegContext ctx) {
-        buildEdge(ctx.getChildCount(),ctx.getText(),true);
+        buildEdge(ctx.getChildCount(),ctx,true);
         return "";
     }
 */
 
     @Override
     public String visitCAssign(GCLParser.CAssignContext ctx) {
-        buildEdge(ctx.getText());
+        buildEdge(ctx);
         return "";
     }
 
     @Override
     public String visitCSkip(GCLParser.CSkipContext ctx) {
-        buildEdge(ctx.getText());
+        buildEdge(ctx);
         return "";
     }
 
@@ -145,7 +154,7 @@ public class Graph extends GCLBaseVisitor<String> {
 
     // b -> G
     @Override public String visitGCOnCondtion(GCLParser.GCOnCondtionContext ctx) {
-        String text = ctx.getChild(0).getText();
+        ParseTree text = ctx.getChild(0);
 
         nodeStackEnd.add(new Node(nodeCount+1));
         nodeCount++;
@@ -180,7 +189,7 @@ public class Graph extends GCLBaseVisitor<String> {
     }
 
     @Override public String visitCDo(GCLParser.CDoContext ctx) {
-        String b = done(ctx.getChild(1));
+        //ParseTree b = done(ctx.getChild(1));
 
 
         Node returner = nodeStackStart.peek();
@@ -193,22 +202,13 @@ public class Graph extends GCLBaseVisitor<String> {
         nodeStackStart.pop();
         nodeStackStart.add(returner);
 
-        buildEdge(b);
+        buildEdge(ctx.getChild(1),true);
 
         nodeCount++;
         return "";
     }
 
-    private String done(ParseTree ctx){
 
-        if (ctx instanceof GCLParser.GCOnCondtionContext){
-
-            return "(!("+ctx.getChild(0).getText()+"))";
-        }
-        //System.out.println(ctx.getText()+" || "+ (ctx instanceof GCLParser.BIdentifyContext));
-        // TODO: Check other class or naaaaah?
-        return done(ctx.getChild(0)) + "&" +done(ctx.getChild(2));
-    }
 
 
 }

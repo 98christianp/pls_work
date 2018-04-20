@@ -107,6 +107,13 @@ public interface GCLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAritNeg(GCLParser.AritNegContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code AritDiv}
+	 * labeled alternative in {@link GCLParser#a}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAritDiv(GCLParser.AritDivContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code BoolDouble}
 	 * labeled alternative in {@link GCLParser#b}.
 	 * @param ctx the parse tree

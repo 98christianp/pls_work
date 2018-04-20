@@ -5,108 +5,36 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class Interpreter extends GCLBaseVisitor<Object> {
-    Node lastNode;
-    private boolean debug = false;
-    private boolean running = true;
-    private ArrayList<Edge> edgeList;
+public class InterpreterHack extends GCLBaseVisitor<Object> {
 
-    private Map<String, Integer> mem = new HashMap<String, Integer>();
+    private Stack<Node> nodeStackStart = new Stack<Node>();
+    private Stack<Node> nodeStackEnd = new Stack<Node>();
+    private ArrayList<Edge> edgeList = new ArrayList<Edge>();
+    private int nodeCount = 0;
 
-    private Interpreter(ArrayList<Edge> edgeList){
-        this.edgeList = edgeList;
-    }
+    //https://stackoverflow.com/questions/4427584/is-there-a-dictionary-which-accepts-values-of-various-data-types
+    private Map<String, Object> mem = new HashMap<String, Object>();
 
-    public void setDebug(boolean debug){
-        this.debug = debug;
-    }
-
-
+    @Override
     public String toString(){
-        System.out.print(lastNode.getPosition() == -1?"Terminated ":"Stuck ");
-        String s = "";
-        for (Map.Entry<String, Integer> entry : mem.entrySet())
+        System.out.println("MEMORY OUT:");
+        for (Map.Entry<String, Object> entry : mem.entrySet())
         {
-            System.out.print(entry.getKey() + " " + entry.getValue() + " ");
+            System.out.println(entry.getKey() + ":" + entry.getValue());
         }
-
         return "";
     }
 
-    private boolean runDone(ParseTree ctx){
-
-        if (ctx instanceof GCLParser.GCOnCondtionContext){
-
-            return  !(boolean)visit(ctx.getChild(0));
-        }
-        //System.out.println(ctx+" || "+ (ctx instanceof GCLParser.BIdentifyContext));
-
-        return runDone(ctx.getChild(0)) && runDone(ctx.getChild(2));
-    }
-
-
-    private Node visitEdge(Edge e,int i){
-        Node currentNode = e.fromNode;
-        if (debug) System.out.println(e);
-
-        Edge eNext = null;
-        int nextI = i;
-
-        boolean b = false;
-
-        if (e.runDone) {
-            b = runDone(e.edge);
-        } else {
-            b = (boolean) visit(e.edge);
-        }
-
-
-        if(this.running) {
-            if (!b) {
-
-                for (int j = i + 1; j < edgeList.size(); j++) {
-                    if (edgeList.get(j).fromNode == currentNode) {
-                        eNext = edgeList.get(j);
-                        nextI = j;
-                        break;
-                    }
-
-                }
-            } else {
-                for (int j = 0; j < edgeList.size(); j++) {
-                    if (edgeList.get(j).fromNode == e.toNode) {
-                        eNext = edgeList.get(j);
-                        nextI = j;
-                        break;
-                    }
-
-                }
-
-            }
-
-            if (eNext != null) {
-                currentNode = visitEdge(eNext, nextI);
-            } else {
-                currentNode = e.toNode;
-            }
-        }
-            return currentNode;
-    }
-
-
-    private Map<String, Integer> getMeThatSweetMemory(){
-
-        // O(n)
-        Edge e = edgeList.get(0);
-        this.lastNode = visitEdge(e,0);
-
-        return this.mem;
-    };
-
     @Override
     public Object visitStart(GCLParser.StartContext ctx) {
+        //nodeStackStart.add(new Node(0));
+        nodeStackStart.add(new Node(0));
+        nodeStackEnd.add(new Node(-1));
 
-        return null;
+        visitChildren(ctx);
+        //this.visit(ctx.exprC());
+
+        return "";
     }
 
     @Override public Object visitBoolDouble(GCLParser.BoolDoubleContext ctx) {
@@ -126,12 +54,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
 
 
     @Override public Object visitBoolCompare(GCLParser.BoolCompareContext ctx) {
-
         switch(ctx.getChild(1).getText()){
-            case "=":
-                return ((int)visit(ctx.getChild(0)))==((int)visit(ctx.getChild(2)));
-            case "!=":
-                return ((int)visit(ctx.getChild(0)))!=((int)visit(ctx.getChild(2)));
             case ">":
                 return ((int)visit(ctx.getChild(0)))>((int)visit(ctx.getChild(2)));
             case ">=":
@@ -171,9 +94,6 @@ public class Interpreter extends GCLBaseVisitor<Object> {
 
 
     @Override public Object visitAritVar(GCLParser.AritVarContext ctx) {
-
-        mem.putIfAbsent(ctx.getText(),0); // Init with 0
-
         return mem.get(ctx.getText());
     }
 
@@ -188,6 +108,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
                 return ((int)visit(ctx.getChild(0)))-((int)visit(ctx.getChild(2)));
 
         }
+
         return null;
     }
 
@@ -198,7 +119,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
     }
 
 
-
+    //TODO: assot???? just 2 then one?
     @Override public Object visitAritPower(GCLParser.AritPowerContext ctx) {
         int a = (int) visit(ctx.getChild(0));
         int b = (int) visit(ctx.getChild(2));
@@ -220,38 +141,23 @@ public class Interpreter extends GCLBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitAritDiv(GCLParser.AritDivContext ctx) {
-        // TODO: The x+1 paradox?
-
-        if(visit(ctx.getChild(2))!=null&&(int)visit(ctx.getChild(2))!=0){
-            System.out.println("Stop"+(int)visit(ctx.getChild(2)));
-            return (int)visit(ctx.getChild(2))/(int)visit(ctx.getChild(2));
-        }
-
-        this.running = false;
+    public Object visitCAssign(GCLParser.CAssignContext ctx) {
+        this.mem.put(ctx.getChild(0).getText(),visit(ctx.getChild(2)));
 
         return null;
     }
 
     @Override
-    public Object visitCAssign(GCLParser.CAssignContext ctx) {
-
-        // return null on 1/0?
-
-        if (visit(ctx.getChild(2))!=null)this.mem.put(ctx.getChild(0).getText(),(int) visit(ctx.getChild(2)));
-
-        return true;
-    }
-
-    @Override
     public Object visitCSkip(GCLParser.CSkipContext ctx) {
-        return true;
+        return null;
     }
 
     @Override
     public Object visitCSep(GCLParser.CSepContext ctx) {
+        visitChildren(ctx);
+        
 
-        return true;
+        return null;
     }
 
     // b -> G
@@ -264,7 +170,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
     }
 
     // GC [] GC
-    @Override
+    @Override 
     public Object visitGCOnCondition(GCLParser.GCOnConditionContext ctx) {
         // Deterministic
 
@@ -298,4 +204,3 @@ public class Interpreter extends GCLBaseVisitor<Object> {
     }
 
 }
-
