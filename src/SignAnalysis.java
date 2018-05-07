@@ -17,26 +17,26 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
     Set<String> setPM = new HashSet<>(Arrays.asList(pmElements));
     private String pmzElements[] = {"+","-","+"};
     Set<String> setPMZ = new HashSet<>(Arrays.asList(pmzElements));
-    
 
-    private final String[][][] assignPower;
+    /*
+
+          + 0 - x1
+        +
+        0
+        -
+        x2
+        */
+    private final String[][][] assignPower =new String[][][]{{new String[] {"+"}, new String[] {"0"},new String[] {"+","-"}},
+                                                            {new String[] {"1"}, new String[] {"1"},new String[] {"1"}},
+                                                            {new String[] {"+","-"}, new String[] {"0"},new String[] {"u"}}};
+
 
 
     private Map<Node,Set<Map<String, String>>> mem = new HashMap<>();
     
     public SignAnalysis(ArrayList<Edge> edgeList){
         this.edgeList = edgeList;
-        /*
 
-          + 0 - x1
-        -
-        0
-        +
-        x2
-        */
-        this.assignPower = new String[][][]{{new String[] {"+"}, new String[] {"0"},new String[] {"u"}},
-                                            {new String[] {"1"}, new String[] {"1"},new String[] {"1"}},
-                                            {new String[] {"+"}, new String[] {"0"},new String[] {"+","-"}}};
 
 
     }
@@ -49,6 +49,13 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         return a1.equals(a2);
     }
 
+    private Map<String, String> cloneMap(Map<String, String> map){
+        Map<String, String> mapClone = new HashMap<>();
+        for(Map.Entry<String,String> entry : map.entrySet()){
+            mapClone.put(entry.getKey(),entry.getValue());
+        }
+        return mapClone;
+    }
 
     // Chaotic
     public void start(){
@@ -57,16 +64,21 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         // for all q -> A(q):={}
         for(Edge e : edgeList){
             EmptySet = new HashSet<>();
-            this.mem.putIfAbsent(e.fromNode,EmptySet);
+            this.mem.putIfAbsent(e.toNode,EmptySet);
         }
 
 
         Edge e = edgeList.get(0);
+        currentAbstractMem.put("a","-");
         boolean found;
+
         // Set starting memory
         Set<Map<String, String>> StartMemSet = new HashSet<>();
         StartMemSet.add(currentAbstractMem);
-        this.mem.put(e.fromNode,StartMemSet);
+
+        this.mem.putIfAbsent(e.fromNode,StartMemSet);
+
+
         boolean chaoticRun = true;
         while(chaoticRun){
 
@@ -75,13 +87,14 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
             for(Edge edge : edgeList){
                 for(Map<String, String> abstractMem : this.mem.get(edge.fromNode)){
                     this.currentSemanticMem = new HashSet<>();
-                    this.currentAbstractMem = abstractMem;
+                    this.currentAbstractMem = cloneMap(abstractMem);
 
                     visit(edge.edge);
 
                     for(Map<String, String> abstractMem1 : this.currentSemanticMem){
                         found = false;
                         for(Map<String, String> abstractMem2 : this.mem.get(edge.toNode)){
+
                             if(compareAbstracMems(abstractMem1,abstractMem2)){
 
                                 found = true;
@@ -89,7 +102,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
                             }
                         }
                         if(!found){
-                            this.mem.get(edge.toNode).add(abstractMem);
+                            this.mem.get(edge.toNode).add(abstractMem1);
                             chaoticRun = true;
                         }
                     }
@@ -100,7 +113,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
 
     public String toString(){
-        System.out.print(lastNode.getPosition() == -1?"Terminated ":"Stuck ");
+        //System.out.print(lastNode.getPosition() == -1?"Terminated ":"Stuck ");
         String s = "";
         for(Map.Entry<Node,Set<Map<String, String>>> allAbstractMem : this.mem.entrySet()){
             System.out.println(allAbstractMem.getKey());
@@ -139,9 +152,9 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
             rSet.add("u");
         }
         else {
-            int x1i = x1.equals("-")?0:x1.equals("0")?1:2;
-            int x2i = x2.equals("-")?0:x2.equals("0")?1:2;
-            rSet.addAll(Arrays.asList(table[x1i][x2i]));
+            int x1i = x1.equals("+")?0:x1.equals("0")?1:2;
+            int x2i = x2.equals("+")?0:x2.equals("0")?1:2;
+            rSet.addAll(Arrays.asList(table[x2i][x1i]));
         }
         return rSet;
     }
@@ -242,24 +255,47 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
 
     @Override public Object visitAritPower(GCLParser.AritPowerContext ctx) {
-        int a = (int) visit(ctx.getChild(0));
+        Set<String> rSet = new HashSet<>();
+        for(String a : (Set<String>) visit(ctx.getChild(0))){
+            for(String b : (Set<String>) visit(ctx.getChild(2))){
 
-        int b = (int) visit(ctx.getChild(2));
-        return getSignsAsSet(getSign(a),getSign(b),this.assignPower);
+                rSet.addAll(getSignsAsSet(a, b, this.assignPower));
+            }
+        }
+        System.out.println(rSet);
+
+        return rSet;
     }
 
 
     @Override public Object visitAritDig(GCLParser.AritDigContext ctx) {
-
-        return Integer.valueOf(ctx.getText());
+        Set<String> digSet = new HashSet<>();
+        digSet.add(getSign(Integer.valueOf(ctx.getText())));
+        return digSet;
     }
 
 
 
 
     @Override public Object visitAritNeg(GCLParser.AritNegContext ctx) {
+        Set<String> rSet = new HashSet<>();
+        String out;
+        for(String a : (Set<String>) visit(ctx.getChild(1))){
 
-        return - (int) visit(ctx.getChild(1));
+            switch (a){
+                case "-":
+                    out = "+";
+                    break;
+                case "+":
+                    out = "-";
+                    break;
+                default:
+                    out = a;
+                    break;
+            }
+            rSet.add(out);
+        }
+        return rSet;
     }
 
     @Override
