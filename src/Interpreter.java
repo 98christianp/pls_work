@@ -52,7 +52,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
         Edge eNext = null;
         int nextI = i;
 
-        boolean b = false;
+        boolean b;
 
         if (e.runDone) {
             b = runDone(e.edge);
