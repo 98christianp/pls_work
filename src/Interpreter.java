@@ -34,7 +34,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
     }
 
 
-    private Map<String, Integer> getMeThatSweetMemory(){
+    public Map<String, Integer> getMeThatSweetMemory(){
 
         // O(n)
         Edge e = edgeList.get(0);
@@ -227,7 +227,7 @@ public class Interpreter extends GCLBaseVisitor<Object> {
 
         if(visit(ctx.getChild(2))!=null&&(int)visit(ctx.getChild(2))!=0){
             System.out.println("Stop"+(int)visit(ctx.getChild(2)));
-            return (int)visit(ctx.getChild(2))/(int)visit(ctx.getChild(2));
+            return (int)visit(ctx.getChild(0))/(int)visit(ctx.getChild(2));
         }
 
         this.running = false;

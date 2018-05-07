@@ -59,12 +59,7 @@ public class Run {
                     System.out.println("OK");
                     break;
 
-                case "_g":
-
-                    break;
-
-                case "_i":
-
+                default:
                     break;
             }
 
@@ -105,6 +100,11 @@ public class Run {
                 System.out.println(interpreter);
 
                 break;
+            case "_a":
+                graph.visit(parser.start());
+                SignAnalysis signAnalysis= new SignAnalysis(graph.edgeList);//new InterpreterHack();
+                signAnalysis.start();
+                System.out.println(signAnalysis);
         }
 
 

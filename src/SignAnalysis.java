@@ -10,7 +10,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
 
     private Map<String, String> currentAbstractMem = new HashMap<>();
-
+    private Set<Map<String, String>> currentSemanticMem;
     private String pElements[] = {"+"};
     Set<String> setP = new HashSet<>(Arrays.asList(pElements));
     private String pmElements[] = {"+","-"};
@@ -24,7 +24,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
     private Map<Node,Set<Map<String, String>>> mem = new HashMap<>();
     
-    private SignAnalysis(ArrayList<Edge> edgeList){
+    public SignAnalysis(ArrayList<Edge> edgeList){
         this.edgeList = edgeList;
         /*
 
@@ -52,7 +52,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
 
     // Chaotic
-    private void start(){
+    public void start(){
         Set<Map<String, String>> EmptySet;
 
         // for all q -> A(q):={}
@@ -63,30 +63,40 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
 
         Edge e = edgeList.get(0);
-
+        boolean found;
         // Set starting memory
         Set<Map<String, String>> StartMemSet = new HashSet<>();
         StartMemSet.add(currentAbstractMem);
         this.mem.put(e.fromNode,StartMemSet);
         boolean chaoticRun = true;
         while(chaoticRun){
+
             chaoticRun = false;
+
             for(Edge edge : edgeList){
                 for(Map<String, String> abstractMem : this.mem.get(edge.fromNode)){
+                    this.currentSemanticMem = new HashSet<>();
                     this.currentAbstractMem = abstractMem;
+
                     visit(edge.edge);
-                    for(Map<String, String> abstractMem2 : this.mem.get(edge.toNode)){
-                        if(abstractMem.equals(abstractMem2)){
+
+                    for(Map<String, String> abstractMem1 : this.currentSemanticMem){
+                        found = false;
+                        for(Map<String, String> abstractMem2 : this.mem.get(edge.toNode)){
+                            if(compareAbstracMems(abstractMem1,abstractMem2)){
+
+                                found = true;
+
+                            }
+                        }
+                        if(!found){
+                            this.mem.get(edge.toNode).add(abstractMem);
                             chaoticRun = true;
                         }
                     }
                 }
-
             }
         }
-        this.lastNode = visitEdge(e,0);
-
-
     }
 
 
@@ -117,60 +127,6 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
         return runDone(ctx.getChild(0)) && runDone(ctx.getChild(2));
     }
-
-
-    private Node visitEdge(Edge e,int i){
-        Node currentNode = e.fromNode;
-
-            if (debug) System.out.println(e);
-
-            Edge eNext = null;
-            int nextI = i;
-
-            boolean b;
-
-            if (e.runDone) {
-                b = runDone(e.edge);
-            } else {
-                b = (boolean) visit(e.edge);
-            }
-
-
-            if(this.running) {
-
-                // TODO Remove b?
-                if (!b) {
-                    // TODO: mem2-> mem1, mem2
-                    for (int j = i + 1; j < edgeList.size(); j++) {
-                        if (edgeList.get(j).fromNode == currentNode) {
-                            eNext = edgeList.get(j);
-                            nextI = j;
-                            break;
-                        }
-
-                    }
-                } else {
-                    for (int j = 0; j < edgeList.size(); j++) {
-                        if (edgeList.get(j).fromNode == e.toNode) {
-                            eNext = edgeList.get(j);
-                            nextI = j;
-                            break;
-                        }
-
-                    }
-
-                }
-
-                if (eNext != null) {
-                    currentNode = visitEdge(eNext, nextI);
-                } else {
-                    currentNode = e.toNode;
-                }
-                return currentNode;
-            }
-        return currentNode;
-        }
-
 
     private String getSign(int x){
         return x>0?"+":x<0?"-":"0";
@@ -290,7 +246,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         int a = (int) visit(ctx.getChild(0));
 
         int b = (int) visit(ctx.getChild(2));
-        return a^b;
+        return getSignsAsSet(getSign(a),getSign(b),this.assignPower);
     }
 
 
@@ -324,8 +280,24 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
     @Override
     public Object visitCAssign(GCLParser.CAssignContext ctx) {
 
+        Map<String, String> refAbstractMem;
+        boolean found;
+        if (visit(ctx.getChild(2))!=null){
+            for(String sign : (Set<String>)visit(ctx.getChild(2))){
+                refAbstractMem = this.currentAbstractMem;
+                refAbstractMem.put(ctx.getChild(0).getText(),sign);
+                found = false;
+                for(Map<String, String> a : this.currentSemanticMem){
+                    if(compareAbstracMems(a,refAbstractMem)){
+                        found = true;
+                    }
+                }
+                if(!found){
+                    this.currentSemanticMem.add(refAbstractMem);
+                }
+            }
 
-        if (visit(ctx.getChild(2))!=null)this.currentAbstractMem.put(ctx.getChild(0).getText(),getSign((int) visit(ctx.getChild(2))));
+        }
 
         return true;
     }
