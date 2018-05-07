@@ -45,9 +45,11 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         this.debug = debug;
     }
 
-    // TODO: Chris
     private boolean compareAbstracMems(Map<String, String> a1,Map<String, String> a2){
-        return true;
+        if (a1.equals(a2)){
+            return true;
+        } else return false;
+
     }
 
 
