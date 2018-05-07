@@ -26,9 +26,54 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         -
         x2
         */
+
+    // Number shit
     private final String[][][] assignPower =new String[][][]{{new String[] {"+"}, new String[] {"0"},new String[] {"+","-"}},
                                                             {new String[] {"1"}, new String[] {"1"},new String[] {"1"}},
                                                             {new String[] {"+","-"}, new String[] {"0"},new String[] {"u"}}};
+
+    private final String[][][] assignPlus =new String[][][]{{new String[] {"+"}, new String[] {"+"},new String[] {"+","0","-"}},
+                                                            {new String[] {"+"}, new String[] {"0"},new String[] {"-"}},
+                                                            {new String[] {"+","0","-"}, new String[] {"-"},new String[] {"-"}}};
+
+    private final String[][][] assignSub =new String[][][]{{new String[] {"+","0","-"}, new String[] {"-"},new String[] {"+"}},
+                                                            {new String[] {"-"}, new String[] {"0"},new String[] {"-"}},
+                                                            {new String[] {"+"}, new String[] {"+"},new String[] {"+","0","-"}}};
+
+    private final String[][][] assignMul =new String[][][]{{new String[] {"+"}, new String[] {"0"},new String[] {"-"}},
+                                                             {new String[] {"0"}, new String[] {"0"},new String[] {"0"}},
+                                                             {new String[] {"-"}, new String[] {"0"},new String[] {"+"}}};
+
+    // Booleans
+    // >=
+    private final String[][][] assignBE =new String[][][]{{new String[] {"tt","ff"}, new String[] {"ff"},new String[] {"ff"}},
+                                                            {new String[] {"tt"}, new String[] {"tt"},new String[] {"ff"}},
+                                                            {new String[] {"tt"}, new String[] {"tt"},new String[] {"ff","tt"}}};
+
+    // >
+    private final String[][][] assignB =new String[][][]{{new String[] {"tt","ff"}, new String[] {"ff"},new String[] {"ff"}},
+                                                        {new String[] {"tt"}, new String[] {"ff"},new String[] {"ff"}},
+                                                        {new String[] {"tt"}, new String[] {"tt"},new String[] {"ff","tt"}}};
+
+    // <=
+    private final String[][][] assignLE =new String[][][]{{new String[] {"tt","ff"}, new String[] {"tt"},new String[] {"tt"}},
+                                                        {new String[] {"ff"}, new String[] {"tt"},new String[] {"tt"}},
+                                                        {new String[] {"ff"}, new String[] {"ff"},new String[] {"ff","tt"}}};
+
+    // <
+    private final String[][][] assignL =new String[][][]{{new String[] {"tt","ff"}, new String[] {"tt"},new String[] {"tt"}},
+                                                        {new String[] {"ff"}, new String[] {"ff"},new String[] {"tt"}},
+                                                        {new String[] {"ff"}, new String[] {"ff"},new String[] {"ff","tt"}}};
+
+    // =
+    private final String[][][] assignE =new String[][][]{{new String[] {"tt","ff"}, new String[] {"ff"},new String[] {"ff"}},
+                                                        {new String[] {"ff"}, new String[] {"tt"},new String[] {"ff"}},
+                                                        {new String[] {"ff"}, new String[] {"ff"},new String[] {"ff","tt"}}};
+
+    // =
+    private final String[][][] assignNE =new String[][][]{{new String[] {"tt","ff"}, new String[] {"tt"},new String[] {"tt"}},
+                                                            {new String[] {"tt"}, new String[] {"tt"},new String[] {"tt"}},
+                                                            {new String[] {"tt"}, new String[] {"tt"},new String[] {"ff","tt"}}};
 
 
 
@@ -89,6 +134,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
                     this.currentSemanticMem = new HashSet<>();
                     this.currentAbstractMem = cloneMap(abstractMem);
 
+
                     visit(edge.edge);
 
                     for(Map<String, String> abstractMem1 : this.currentSemanticMem){
@@ -105,6 +151,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
                             this.mem.get(edge.toNode).add(abstractMem1);
                             chaoticRun = true;
                         }
+
                     }
                 }
             }
@@ -117,12 +164,15 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         String s = "";
         for(Map.Entry<Node,Set<Map<String, String>>> allAbstractMem : this.mem.entrySet()){
             System.out.println(allAbstractMem.getKey());
+            System.out.println(allAbstractMem.getValue());
+            /*
             for(Map<String,String> abstractMem : allAbstractMem.getValue()){
                 for (Map.Entry<String, String> entry : abstractMem.entrySet())
                 {
                     System.out.println(entry.getKey() + " " + entry.getValue() + " ");
                 }
             }
+            */
 
         }
 
@@ -164,7 +214,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
         return null;
     }
-    /*
+
     @Override public Object visitBoolDouble(GCLParser.BoolDoubleContext ctx) {
         switch(ctx.getChild(1).getText()){
             case "&":
@@ -223,27 +273,43 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
         return visit(ctx.getChild(1));
     }
-    */
+
 
     @Override public Object visitAritVar(GCLParser.AritVarContext ctx) {
-
-        // TODO: what if abscent? mem.putIfAbsent(ctx.getText(),)
-
-        return currentAbstractMem.get(ctx.getText());
+        Set<String> rSet = new HashSet<>();
+        rSet.add(currentAbstractMem.get(ctx.getText()));
+        return rSet;
     }
 
 
     @Override public Object visitAritDouble(GCLParser.AritDoubleContext ctx) {
+        Set<String> rSet = new HashSet<>();
+
         switch(ctx.getChild(1).getText()){
             case "+":
-                return ((int)visit(ctx.getChild(0)))+((int)visit(ctx.getChild(2)));
+                for(String a : (Set<String>) visit(ctx.getChild(0))){
+                    for(String b : (Set<String>) visit(ctx.getChild(2))){
+                        rSet.addAll(getSignsAsSet(a, b, this.assignPlus));
+                    }
+                }
+                break;
             case "*":
-                return ((int)visit(ctx.getChild(0)))*((int)visit(ctx.getChild(2)));
+                for(String a : (Set<String>) visit(ctx.getChild(0))){
+                    for(String b : (Set<String>) visit(ctx.getChild(2))){
+                        rSet.addAll(getSignsAsSet(a, b, this.assignMul));
+                    }
+                }
+                break;
             case "-":
-                return ((int)visit(ctx.getChild(0)))-((int)visit(ctx.getChild(2)));
+                for(String a : (Set<String>) visit(ctx.getChild(0))){
+                    for(String b : (Set<String>) visit(ctx.getChild(2))){
+                        rSet.addAll(getSignsAsSet(a, b, this.assignSub));
+                    }
+                }
+                break;
 
         }
-        return null;
+        return rSet;
     }
 
 
@@ -262,8 +328,6 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
                 rSet.addAll(getSignsAsSet(a, b, this.assignPower));
             }
         }
-        System.out.println(rSet);
-
         return rSet;
     }
 
@@ -319,16 +383,22 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         boolean found;
         if (visit(ctx.getChild(2))!=null){
             for(String sign : (Set<String>)visit(ctx.getChild(2))){
-                refAbstractMem = this.currentAbstractMem;
+
+
+                refAbstractMem = cloneMap(this.currentAbstractMem);
                 refAbstractMem.put(ctx.getChild(0).getText(),sign);
                 found = false;
                 for(Map<String, String> a : this.currentSemanticMem){
+
+
                     if(compareAbstracMems(a,refAbstractMem)){
                         found = true;
                     }
                 }
                 if(!found){
+
                     this.currentSemanticMem.add(refAbstractMem);
+
                 }
             }
 
@@ -339,6 +409,7 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
     @Override
     public Object visitCSkip(GCLParser.CSkipContext ctx) {
+        this.currentSemanticMem.add(currentAbstractMem);
         return true;
     }
 
@@ -350,8 +421,9 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
 
     // b -> G
     @Override public Object visitGCOnCondtion(GCLParser.GCOnCondtionContext ctx) {
-        boolean b = (boolean) visit(ctx.getChild(0));
-        if(b){
+        Set<String> b = (Set<String>) visit(ctx.getChild(0));
+
+        if(b.contains("tt")){
             visit(ctx.getChild(2));
         }
         return b;
@@ -371,8 +443,6 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         }
 
 
-
-
         return true;
     }
 
@@ -387,7 +457,6 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         while(b){
             b = (boolean) visit(ctx.getChild(1));
         }
-
         return null;
     }
 

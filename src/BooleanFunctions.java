@@ -3,6 +3,15 @@ import java.util.HashSet;
 /**
  * Created by christianpetersen on 07/05/2018.
  */
+/*
+
+          + 0 - x1
+        +
+        0
+        -
+        x2
+        */
+
 public class BooleanFunctions {
 
     public HashSet<String> compareGEQ(String op1, String op2){
