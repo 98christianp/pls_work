@@ -22,7 +22,6 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
     private final String[][][] assignPower;
 
 
-
     private Map<Node,Set<Map<String, String>>> mem = new HashMap<>();
     
     private SignAnalysis(ArrayList<Edge> edgeList){
@@ -46,6 +45,12 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         this.debug = debug;
     }
 
+    // TODO: Chris
+    private boolean compareAbstracMems(Map<String, String> a1,Map<String, String> a2){
+        return true;
+    }
+
+
     // Chaotic
     private void start(){
         Set<Map<String, String>> EmptySet;
@@ -65,10 +70,16 @@ public class SignAnalysis extends GCLBaseVisitor<Object> {
         this.mem.put(e.fromNode,StartMemSet);
         boolean chaoticRun = true;
         while(chaoticRun){
+            chaoticRun = false;
             for(Edge edge : edgeList){
                 for(Map<String, String> abstractMem : this.mem.get(edge.fromNode)){
                     this.currentAbstractMem = abstractMem;
                     visit(edge.edge);
+                    for(Map<String, String> abstractMem2 : this.mem.get(edge.toNode)){
+                        if(abstractMem.equals(abstractMem2)){
+                            chaoticRun = true;
+                        }
+                    }
                 }
 
             }
