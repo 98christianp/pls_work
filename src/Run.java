@@ -7,7 +7,7 @@ public class Run {
 
     public static void main(String args[]) throws Exception {
 
-        System.out.println("Insert command (end with: _p (Test grammar), _g (Generate Graph), _i (Interpretation):");
+        System.out.println("Insert command (end with: _p (Test grammar), _g (Generate Graph), _i (Interpretation), _a:");
 
         String input = "";
         String lineInput = null;
@@ -21,7 +21,7 @@ public class Run {
             if(lineInput.equals("_q")){
                 break;
             }
-            else if(lineInput.equals("_p") || lineInput.equals("_g") || lineInput.equals("_i")){
+            else if(lineInput.equals("_p") || lineInput.equals("_g") || lineInput.equals("_i") || lineInput.equals("_a")){
                 command = lineInput;
                 break;
             }
